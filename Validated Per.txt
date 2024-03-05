@@ -1,0 +1,1 @@
+Experimental validation of rotating detonation for rocket propulsion - uses 0.11% A_i/A_a ratio
