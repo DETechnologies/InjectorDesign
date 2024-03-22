@@ -62,14 +62,13 @@ if iterator
         fprintf('\n \nloop number: %d',loopNum)
     end 
     % print results
-    fprintf('\nOxygen Plenum Pressure, %d',P_upstream_O)
-    fprintf('\nOxygen Injection Area Ratio, %d',AreaRatio_O)
-    fprintf('\nOxygen Injection Area [m^3], %d',OxyInjectorArea)
+    fprintf('Oxygen Plenum Pressure, %d',P_upstream_O)
+    fprintf('Oxygen Injection Area Ratio, %d',AreaRatio_O)
+    fprintf('Oxygen Injection Area [m^3], %d',OxyInjectorArea)
 
     % NOW REPEAT THE SAME THING FOR HYDROGEN
 
     loopNum=0; % reset counter.
-    fprintf('\n \nloop number: %d',loopNum)
     while true 
         HydroInjectorArea=AnnulusArea*AreaRatio_H;
         P_upstream_H=(m_dot_h*sqrt(T_t)/HydroInjectorArea)*sqrt(R_H/gamma)*(((gamma+1)/2)^((gamma+1)/(2*(gamma-1))));
@@ -80,24 +79,60 @@ if iterator
         else
             if (P_upstream_H - PlenumDesired) > e
                 AreaRatio_H=AreaRatio_H+stepsize;
+                fprintf("\n UP!")
             elseif (P_upstream_H - PlenumDesired) < -e
                 AreaRatio_H=AreaRatio_H-stepsize;
+                fprintf("\n DOWN!")
             end
         end 
         loopNum=loopNum+1;
         fprintf('\n \nloop number: %d',loopNum)
     end 
     % print results
-    fprintf('\nHydrogen Plenum Pressure, %d',P_upstream_H)
-    fprintf('\nHydrogen Injection Area Ratio, %d',AreaRatio_H)
-    fprintf('\nHydrogen Injection Area [m^3], %d',HydroInjectorArea)
+    fprintf('Oxygen Plenum Pressure, %d',P_upstream_H)
+    fprintf('Oxygen Injection Area Ratio, %d',P_upstream_H)
+    fprintf('Oxygen Injection Area [m^3], %d',HydroInjectorArea)
+
 end 
 
-% Print All Results
-fprintf('\n\n\n\nSummary')
-fprintf('\nOxygen Plenum Pressure, %d',P_upstream_O)
-fprintf('\nOxygen Injection Area Ratio, %d',AreaRatio_O)
-fprintf('\nOxygen Injection Area [m^3], %d',OxyInjectorArea)
-fprintf('\nHydrogen Plenum Pressure, %d',P_upstream_H)
-fprintf('\nHydrogen Injection Area Ratio, %d',AreaRatio_H)
-fprintf('\nHydrogen Injection Area [m^3], %d',HydroInjectorArea)
+
+%% this sizes the converge model injectors
+
+A_inj=1e-3*16.7e-3*60;
+T=300;
+% R_avg=(R_H+R_O)/2;
+R_avg=R_O
+P_plen_convg=(m_dot*sqrt(T)/A_inj)*sqrt(R_avg/gamma)*(((gamma+1)/2)^((gamma+1)/(2*(gamma-1))))
+
+
+PlenumDesired=130e+3;
+e=0.0005e+3;
+stepsize=0.000001e-3;
+
+iteratorV2=1;
+depth=16.7e-3;
+if iteratorV2
+    while true 
+        
+        A_inj=1e-3*depth*60;
+        P_plen_convg=(m_dot*sqrt(T)/A_inj)*sqrt(R_avg/gamma)*(((gamma+1)/2)^((gamma+1)/(2*(gamma-1))))
+
+        if abs(P_plen_convg - PlenumDesired) < e
+            %jump out!!!
+            break
+        else
+            if (P_plen_convg - PlenumDesired) > e
+                depth=depth+stepsize;
+                fprintf("up")
+            elseif (P_plen_convg - PlenumDesired) < -e
+                depth=depth-stepsize;
+                fprintf("\n DOWN!")
+            end
+        end 
+        loopNum=loopNum+1;
+        fprintf('\n \nloop number: %d',loopNum)
+    end 
+    fprintf("end")
+end 
+
+P_plen_convg
