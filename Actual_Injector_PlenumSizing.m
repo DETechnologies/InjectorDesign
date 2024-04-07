@@ -13,16 +13,16 @@ Delta=5e-3;
 ID=OD-2*Delta;
 
 AnnulusArea=(pi()/4)*(OD^2-ID^2);
-m_dot=0.320; % kg/s total
+m_dot=0.33472; % g/s total
 
 % mass flow rate of propellant
-h_massFrac=0.1116;
+h_massFrac=0.11191;
 O_massFrac=1-h_massFrac;
 m_dot_h=m_dot*h_massFrac;
 m_dot_O=m_dot*O_massFrac;
 
 % chemical properties
-gamma=1.4; 
+gamma=1.4013789; 
 R_O=259.84; % gas constant O 
 R_H=4124.2; % gas constant H
 T_t=293; % K assume constant temp
